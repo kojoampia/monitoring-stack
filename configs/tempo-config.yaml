@@ -6,12 +6,12 @@ distributor:
     otlp:
       protocols:
         grpc:
-          endpoint: 0.0.0.0:4317
+          endpoint: 0.0.0.0:4417  # Changed from 4317 to avoid conflict
         http:
-          endpoint: 0.0.0.0:4318
+          endpoint: 0.0.0.0:4418  # Changed from 4318 to avoid conflict
 
 ingester:
-  max_block_duration: 5m               # How long to keep traces in memory before flushing
+  max_block_duration: 5m
   lifecycler:
     ring:
       kvstore:
@@ -20,27 +20,25 @@ ingester:
 
 storage:
   trace:
-    backend: s3                        # Define S3/MinIO as the long-term store
+    backend: s3
     s3:
-      bucket: tempo                    # Matches the bucket created in minio-setup
-      endpoint: ${S3_ENDPOINT}         # Injected from .env
-      access_key: ${S3_ACCESS_KEY}     # Injected from .env
-      secret_key: ${S3_SECRET_KEY}     # Injected from .env
+      bucket: tempo
+      endpoint: ${S3_ENDPOINT}
+      access_key: ${S3_ACCESS_KEY}
+      secret_key: ${S3_SECRET_KEY}
       insecure: true
       forcepathstyle: true
     wal:
-      path: /var/tempo/wal             # Local disk persistence before S3 upload
+      path: /var/tempo/wal
     local:
-      path: /var/tempo/blocks          # Temporary local block storage
+      path: /var/tempo/blocks
 
-# Compactor handles deduplication and retention in S3
 compactor:
   ring:
     kvstore:
       store: inmemory
   compaction:
-    compaction_cycle: 30s
-    block_retention: 48h               # Adjust based on your production needs
+    block_retention: 48h
 
 metrics_generator:
   registry:

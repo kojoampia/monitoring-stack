@@ -60,12 +60,19 @@ services:
     container_name: mimir
     ports:
       - "127.0.0.1:9009:9009"
-    command: -config.file=/etc/mimir/mimir.yaml
+    command: 
+      - "-config.file=/etc/mimir/mimir.yaml"
+      # Enable the alertmanager and ruler
+      - "-target=all,alertmanager,ruler" 
+    env_file: .env
     volumes:
       - ./configs/mimir-config.yaml:/etc/mimir/mimir.yaml
+      - ./configs/alertmanager.yaml:/etc/mimir/alertmanager.yaml
+      - ./configs/mimir-rules.yaml:/etc/mimir/rules.yaml
       - mimir-data:/data
     depends_on:
-      - minio-setup
+      minio-setup:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:

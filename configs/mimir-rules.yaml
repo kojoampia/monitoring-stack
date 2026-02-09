@@ -1,0 +1,27 @@
+
+alertmanager:
+  external_url: http://localhost:9009/alertmanager
+  fallback_config_file: /etc/mimir/alertmanager.yaml
+
+ruler:
+  rule_path: /data/ruler
+  alertmanager_url: http://localhost:9009/alertmanager
+  storage:
+    backend: local
+    local:
+      directory: /etc/mimir/rules
+
+groups:
+  - name: container_alerts
+    rules:
+      - alert: HighContainerCPU
+        expr: |
+          sum by (container_label_com_docker_compose_service) (
+            rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service!=""}[5m])
+          ) * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High CPU usage on {{ $labels.container_label_com_docker_compose_service }}"
+          description: "Service {{ $labels.container_label_com_docker_compose_service }} has been using >90% CPU for more than 2 minutes."
