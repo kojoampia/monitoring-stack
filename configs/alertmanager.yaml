@@ -1,12 +1,54 @@
+global:
+  # Email SMTP settings
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'monitoring@yourdomain.com'
+  smtp_auth_username: 'monitoring@yourdomain.com'
+  smtp_auth_password: 'your-app-password'
+  smtp_require_tls: true
+
 route:
-  group_by: ['alertname', 'container_name']
+  group_by: ['alertname', 'job']
   group_wait: 30s
   group_interval: 5m
-  repeat_interval: 1h
-  receiver: 'email-notifications'
+  repeat_interval: 3h 
+  receiver: 'telegram-critical' # Default receiver
+
+  # Routing specific alerts based on severity
+  routes:
+    - matchers:
+        - severity=critical
+      receiver: 'telegram-critical'
+      continue: true # Also send critical alerts to email
+    - matchers:
+        - severity=warning
+      receiver: 'email-warn'
 
 receivers:
-  - name: 'email-notifications'
+  # Telegram Configuration
+  - name: 'telegram-critical'
+    telegram_configs:
+      - bot_token: '123456789:ABCdefGHIjklMNOpqrSTUvwxYZ' # Replace with your Token
+        chat_id: -1001234567890                          # Replace with your Chat ID
+        message: |
+          <b>Alert: {{ .Status | toUpper }}</b>
+          <b>Name:</b> {{ .GroupLabels.alertname }}
+          <b>Severity:</b> {{ .CommonLabels.severity }}
+          <b>Description:</b> {{ .CommonAnnotations.description }}
+          <a href="{{ .ExternalURL }}">View in Alertmanager</a>
+        parse_mode: 'HTML'
+
+  # Email Configuration
+  - name: 'email-warn'
     email_configs:
-      - to: 'support@jojoaddison.net' # Replace with your email address
+      - to: 'support@jojoaddison.net'
         send_resolved: true
+        headers:
+          Subject: '[{{ .Status | toUpper }}] Monitoring Alert: {{ .GroupLabels.alertname }}'
+        html: |
+          <h4>Alert Details</h4>
+          <ul>
+            <li><strong>Status:</strong> {{ .Status }}</li>
+            <li><strong>Summary:</strong> {{ .CommonAnnotations.summary }}</li>
+            <li><strong>Description:</strong> {{ .CommonAnnotations.description }}</li>
+          </ul>
+          <p><a href="{{ .ExternalURL }}">Alertmanager Console</a></p>

@@ -1,19 +1,17 @@
-
-alertmanager:
-  external_url: http://localhost:9009/alertmanager
-  fallback_config_file: /etc/mimir/alertmanager.yaml
-
-ruler:
-  rule_path: /data/ruler
-  alertmanager_url: http://localhost:9009/alertmanager
-  storage:
-    backend: local
-    local:
-      directory: /etc/mimir/rules
-
 groups:
-  - name: container_alerts
+  # --- GROUP 1: Recording Rules (Performance Optimization) ---
+  - name: container_resource_usage_recording_rules
+    interval: 1m
     rules:
+      # Pre-calculates 5-minute CPU usage rate to speed up dashboard loading
+      - record: container_cpu_usage_seconds:rate5m
+        expr: sum by (namespace, pod, container) (rate(container_cpu_usage_seconds_total[5m]))
+
+  # --- GROUP 2: Infrastructure Alerting Rules ---
+  - name: container_alerts
+    interval: 1m
+    rules:
+      # Alert if a container is using more than 90% of its CPU limit
       - alert: HighContainerCPU
         expr: |
           sum by (container_label_com_docker_compose_service) (
@@ -24,4 +22,29 @@ groups:
           severity: critical
         annotations:
           summary: "High CPU usage on {{ $labels.container_label_com_docker_compose_service }}"
-          description: "Service {{ $labels.container_label_com_docker_compose_service }} has been using >90% CPU for more than 2 minutes."
+          description: "Service {{ $labels.container_label_com_docker_compose_service }} is consuming >90% CPU."
+
+      # Alert if memory usage is near 95%
+      - alert: ContainerMemoryCritical
+        expr: |
+          (container_memory_usage_bytes / container_spec_memory_limit_bytes) * 100 > 95
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Memory usage critical for {{ $labels.container_label_com_docker_compose_service }}"
+          description: "Container memory is at {{ $value | printf \"%.2f\" }}%."
+
+  # --- GROUP 3: Application Health ---
+  - name: app_health_alerts
+    interval: 30s
+    rules:
+      # Alert if a service is down (no metrics received)
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.instance }} is down"
+          description: "Mimir has lost contact with {{ $labels.instance }} for over 1 minute."
