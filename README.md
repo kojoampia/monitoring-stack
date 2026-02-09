@@ -32,7 +32,7 @@ The stack is composed of the following services:
 
 To run the stack, you need to have Docker and Docker Compose installed.
 
-1.  Navigate to the `0-monitoring-stack` directory.
+1.  Navigate to the `monitoring-stack` directory.
 2.  Run the following command to start the stack in detached mode:
 
     ```sh

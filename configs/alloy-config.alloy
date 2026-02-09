@@ -1,38 +1,55 @@
-// Collect Docker Logs
-discovery.docker "containers" {
+// 1. DISCOVERY: Find all Docker containers
+discovery.docker "all_containers" {
   host = "unix:///var/run/docker.sock"
 }
 
-loki.source.docker "logs" {
-  targets    = discovery.docker.containers.targets
-  forward_to = [loki.write.default.receiver]
+// 2. LOGS: Scrape container logs and send to Loki
+loki.source.docker "container_logs" {
+  host    = "unix:///var/run/docker.sock"
+  targets = discovery.docker.all_containers.targets
+  forward_to = [loki.write.local_loki.receiver]
 }
 
-loki.write "default" {
+loki.write "local_loki" {
   endpoint {
     url = "http://loki:3100/loki/api/v1/push"
   }
 }
 
-// OTLP Receiver for Traces/Metrics (Application Pushes Here)
-otelcol.receiver.otlp "default" {
-  grpc { endpoint = "0.0.0.0:4317" }
-  http { endpoint = "0.0.0.0:4318" }
+// 3. METRICS: Collect container resource stats (cAdvisor)
+prometheus.exporter.cadvisor "docker_stats" {
+  docker_host = "unix:///var/run/docker.sock"
+}
 
-  output {
-    metrics = [otelcol.exporter.prometheus.mimir.input]
-    traces  = [otelcol.exporter.otlp.tempo.input]
+prometheus.scrape "metrics_scraper" {
+  targets    = prometheus.exporter.cadvisor.docker_stats.targets
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}
+
+prometheus.remote_write "local_mimir" {
+  endpoint {
+    url = "http://mimir:9009/api/v1/push"
   }
 }
 
-otelcol.exporter.prometheus "mimir" {
-  forward_to = [prometheus.remote_write.mimir.receiver]
+// 4. TRACES & APP TELEMETRY: Receive from your OTEL Collector
+otelcol.receiver.otlp "default" {
+  grpc { endpoint = "0.0.0.0:4317" } // Internal to the container
+  
+  output {
+    metrics = [otelcol.exporter.prometheus.mimir_output.input]
+    traces  = [otelcol.exporter.otlp.tempo_output.input]
+  }
 }
 
-prometheus.remote_write "mimir" {
-  endpoint { url = "http://mimir:9009/api/v1/push" }
+otelcol.exporter.prometheus "mimir_output" {
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
 }
 
-otelcol.exporter.otlp "tempo" {
-  client { endpoint = "tempo:4317" }
+otelcol.exporter.otlp "tempo_output" {
+  client {
+    endpoint = "tempo:4417" // Sending to Tempo's refactored port
+    tls { insecure = true }
+  }
 }
