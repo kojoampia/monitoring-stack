@@ -1,0 +1,136 @@
+name: monitoring-stack
+
+services:
+  # Automated Bucket Creation for MinIO
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    env_file: .env
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - monitoring
+
+  minio-setup:
+    image: minio/mc
+    depends_on:
+      - minio
+    env_file: .env
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc alias set local http://$$S3_ENDPOINT $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD) do echo '...waiting for minio' && sleep 1; done;
+      for bucket in $$(echo $$MINIO_BUCKETS | tr ',' ' '); do
+        /usr/bin/mc mb --ignore-existing local/$$bucket;
+      done;
+      exit 0;
+      "
+    networks:
+      - monitoring
+
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: loki
+    ports:
+      - "127.0.0.1:3100:3100"
+    command: -config.file=/etc/loki/config.yaml
+    env_file: .env
+    volumes:
+      - ./configs/loki-config.yaml:/etc/loki/config.yaml
+      - loki-data:/loki
+    depends_on:
+      minio-setup:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    networks:
+      - monitoring
+
+  mimir:
+    image: grafana/mimir:latest
+    container_name: mimir
+    ports:
+      - "127.0.0.1:9009:9009"
+    command: -config.file=/etc/mimir/mimir.yaml
+    volumes:
+      - ./configs/mimir-config.yaml:/etc/mimir/mimir.yaml
+      - mimir-data:/data
+    depends_on:
+      - minio-setup
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.0'
+    networks:
+      - monitoring
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    ports:
+      - "127.0.0.1:3200:3200"
+      - "127.0.0.1:4417:4417" # OTLP gRPC
+      - "127.0.0.1:4418:4418" # OTLP HTTP
+    command: -config.file=/etc/tempo/tempo.yaml
+    volumes:
+      - ./configs/tempo-config.yaml:/etc/tempo/tempo.yaml
+      - tempo-data:/var/tempo
+    depends_on:
+      - minio-setup
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    networks:
+      - monitoring
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    volumes:
+      - ./configs/alloy-config.alloy:/etc/alloy/config.alloy
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: run --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
+    name: monitoring
+    external: true      
+
+volumes:
+  minio-data:
+  loki-data:
+  mimir-data:
+  tempo-data:
+  grafana-data:

@@ -1,0 +1,51 @@
+apiVersion: 1
+
+datasources:
+  # 1. Prometheus (Mimir)
+  - name: Mimir
+    type: prometheus
+    uid: mimir
+    access: proxy
+    url: http://mimir:9009
+    jsonData:
+      httpMethod: POST
+      # Link metrics to traces (Exemplars)
+      exemplarTraceIdDestinations:
+        - name: traceID
+          datasourceUid: tempo
+    editable: false
+
+  # 2. Loki
+  - name: Loki
+    type: loki
+    uid: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      # Derived fields: Extracts TraceID from logs and creates a link to Tempo
+      derivedFields:
+        - datasourceUid: tempo
+          matcherRegex: "(?:traceID|trace_id)=(\\w+)"
+          name: TraceID
+          url: '$${__value.raw}' # The Trace ID value becomes the link
+    editable: false
+
+  # 3. Tempo
+  - name: Tempo
+    type: tempo
+    uid: tempo
+    access: proxy
+    url: http://tempo:3200
+    jsonData:
+      httpMethod: GET
+      # Link traces back to logs
+      nodeGraph:
+        enabled: true
+      lokiSearch:
+        datasourceUid: loki
+      traceQuery:
+        lokiProvider: loki
+      # This allows Tempo to find logs for a specific trace automatically
+      serviceMap:
+        datasourceUid: mimir
+    editable: false

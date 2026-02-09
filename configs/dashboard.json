@@ -1,0 +1,32 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "panels": [
+    {
+      "title": "Ingestion Rate - Metrics (Mimir)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        { "datasource": { "uid": "mimir" }, "expr": "sum(rate(prometheus_tsdb_head_samples_appended_total[5m]))" }
+      ]
+    },
+    {
+      "title": "Log Rate (Loki)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        { "datasource": { "uid": "loki" }, "expr": "sum(count_over_time({job=~\".+\"}[5m]))" }
+      ]
+    },
+    {
+      "title": "Trace Spans Processed (Tempo)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+      "targets": [
+        { "datasource": { "uid": "mimir" }, "expr": "sum(rate(tempo_ingester_spans_received_total[5m]))" }
+      ]
+    }
+  ],
+  "title": "LGTM Stack Health",
+  "uid": "lgtm-health"
+}
