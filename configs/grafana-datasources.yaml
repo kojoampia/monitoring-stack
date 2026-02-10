@@ -9,28 +9,30 @@ datasources:
     url: http://mimir:9009
     jsonData:
       httpMethod: POST
-      # Link metrics to traces (Exemplars)
+      manageAlerts: true
+      prometheusType: Mimir
+      # Exemplars allow jumping from metric spikes to specific traces
       exemplarTraceIdDestinations:
         - name: traceID
           datasourceUid: tempo
     editable: false
 
-  # 2. Loki
+  # 2. Loki (Logs)
   - name: Loki
     type: loki
     uid: loki
     access: proxy
     url: http://loki:3100
     jsonData:
-      # Derived fields: Extracts TraceID from logs and creates a link to Tempo
+      # Derived fields extract TraceIDs from log lines and turn them into links
       derivedFields:
         - datasourceUid: tempo
           matcherRegex: "(?:traceID|trace_id)=(\\w+)"
           name: TraceID
-          url: '$${__value.raw}' # The Trace ID value becomes the link
+          url: '$${__value.raw}'
     editable: false
 
-  # 3. Tempo
+  # 3. Tempo (Traces)
   - name: Tempo
     type: tempo
     uid: tempo
@@ -38,14 +40,24 @@ datasources:
     url: http://tempo:3200
     jsonData:
       httpMethod: GET
-      # Link traces back to logs
+      # Enables the "Service Graph" and "Node Graph" features
       nodeGraph:
         enabled: true
       lokiSearch:
         datasourceUid: loki
       traceQuery:
         lokiProvider: loki
-      # This allows Tempo to find logs for a specific trace automatically
+      # Links Tempo to Mimir to generate metrics from spans (SpanMetrics)
       serviceMap:
         datasourceUid: mimir
+    editable: false
+
+  # 4. Alertmanager (Mimir's internal Alertmanager)
+  - name: Alertmanager
+    type: alertmanager
+    uid: alertmanager
+    access: proxy
+    url: http://mimir:9009/alertmanager
+    jsonData:
+      implementation: mimir
     editable: false

@@ -21,6 +21,7 @@ services:
 
   minio-setup:
     image: minio/mc
+    container_name: minio-setup
     depends_on:
       - minio
     env_file: .env
@@ -40,7 +41,9 @@ services:
     container_name: loki
     ports:
       - "127.0.0.1:3100:3100"
-    command: -config.file=/etc/loki/config.yaml
+    command:
+      - "-config.file=/etc/loki/config.yaml"
+      - "-config.expand-env=true"
     env_file: .env
     volumes:
       - ./configs/loki-config.yaml:/etc/loki/config.yaml
@@ -59,16 +62,17 @@ services:
     image: grafana/mimir:latest
     container_name: mimir
     ports:
-      - "127.0.0.1:9009:9009"
+      - "127.0.0.1:9999:9009"
     command: 
       - "-config.file=/etc/mimir/mimir.yaml"
+      - "-config.expand-env=true"
       # Enable the alertmanager and ruler
       - "-target=all,alertmanager,ruler" 
     env_file: .env
     volumes:
       - ./configs/mimir-config.yaml:/etc/mimir/mimir.yaml
       - ./configs/alertmanager.yaml:/etc/mimir/alertmanager.yaml
-      - ./configs/mimir-rules.yaml:/etc/mimir/rules.yaml
+      - ./configs/mimir-rules.yaml:/etc/mimir/rules/anonymous/rules.yaml
       - mimir-data:/data
     depends_on:
       minio-setup:
@@ -84,11 +88,14 @@ services:
   tempo:
     image: grafana/tempo:latest
     container_name: tempo
+    env_file: .env
     ports:
       - "127.0.0.1:3200:3200"
       - "127.0.0.1:4417:4417" # OTLP gRPC
       - "127.0.0.1:4418:4418" # OTLP HTTP
-    command: -config.file=/etc/tempo/tempo.yaml
+    command:
+      - "-config.file=/etc/tempo/tempo.yaml"
+      - "-config.expand-env=true"
     volumes:
       - ./configs/tempo-config.yaml:/etc/tempo/tempo.yaml
       - tempo-data:/var/tempo
@@ -122,6 +129,11 @@ services:
       - "127.0.0.1:3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
+      # Provisioning Configuration
+      - ./configs/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./configs/grafana-dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      # Dashboard JSON files
+      - ./configs/dashboards:/etc/grafana/provisioning/dashboards/json
     deploy:
       resources:
         limits:
