@@ -1,9 +1,9 @@
 global:
   # Email SMTP settings
-  smtp_smarthost: 'smtp.gmail.com:587'
-  smtp_from: 'monitoring@yourdomain.com'
-  smtp_auth_username: 'monitoring@yourdomain.com'
-  smtp_auth_password: 'your-app-password'
+  smtp_smarthost: $SMTP_MAIL_SERVER:$SMTP_MAIL_PORT
+  smtp_from: $SMTP_MAIL_FROM
+  smtp_auth_username: $SMTP_MAIL_USER
+  smtp_auth_password: $SMTP_MAIL_PASSWORD
   smtp_require_tls: true
 
 route:

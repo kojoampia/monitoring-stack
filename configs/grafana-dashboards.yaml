@@ -1,0 +1,15 @@
+apiVersion: 1
+
+providers:
+  # Provider for System Dashboards
+  - name: 'System Monitoring'       # Unique name for this provider
+    orgId: 1                       # Default organization ID
+    folder: 'Infrastructure'       # The UI folder name where these dashboards appear
+    type: file
+    disableDeletion: true          # Prevent users from deleting these in the UI
+    allowUiUpdates: false          # UI changes won't be saved back to the JSON file
+    updateIntervalSeconds: 30      # How often to scan the folder for new/updated JSONs
+    options:
+      path: /etc/grafana/provisioning/dashboards/json
+      # If true, subdirectories in 'path' become folders in Grafana UI
+      foldersFromFilesStructure: true

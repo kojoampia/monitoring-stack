@@ -62,7 +62,7 @@ services:
     image: grafana/mimir:latest
     container_name: mimir
     ports:
-      - "127.0.0.1:9999:9009"
+      - "127.0.0.1:9099:9009"
     command: 
       - "-config.file=/etc/mimir/mimir.yaml"
       - "-config.expand-env=true"
