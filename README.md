@@ -39,6 +39,44 @@ To run the stack, you need to have Docker and Docker Compose installed.
     docker-compose up -d
     ```
 
+## .env Configuration
+
+Create a `.env` file in this directory before starting the stack. The table below documents the expected variables.
+
+| Variable | Required | Used By | Description | Example |
+|---|---|---|---|---|
+| MINIO_ROOT_USER | Yes | MinIO, minio-setup | MinIO admin username used during object storage bootstrap. | admin |
+| MINIO_ROOT_PASSWORD | Yes | MinIO, minio-setup | MinIO admin password used during object storage bootstrap. | ChangeMeStrongPassword |
+| S3_ENDPOINT | Yes | Loki, Mimir, Tempo, minio-setup | S3-compatible endpoint used as object storage backend for logs, metrics, and traces. | minio:9000 |
+| S3_ACCESS_KEY | Yes | Loki, Mimir, Tempo | Access key for S3-compatible storage. Should match MinIO credentials in this setup. | admin |
+| S3_SECRET_KEY | Yes | Loki, Mimir, Tempo | Secret key for S3-compatible storage. Should match MinIO credentials in this setup. | ChangeMeStrongPassword |
+| MINIO_BUCKETS | Yes | minio-setup | Comma-separated list of buckets to create during startup. | loki,mimir,mimir-alertmanager,tempo |
+| SMTP_USERNAME | Optional | Alerting integrations | SMTP account username for email notifications. | alerts@example.com |
+| SMTP_PASSWORD | Optional | Alerting integrations | SMTP account password or app password. | app-password |
+| TELEGRAM_BOT_TOKEN | Optional | Alerting integrations | Telegram bot token for Telegram notifications. | 123456:ABCDEF |
+| TELEGRAM_CHAT_ID | Optional | Alerting integrations | Target Telegram chat ID for alerts. | -100123456789 |
+| SMTP_MAIL_FROM | Optional | Alerting integrations | Sender identity used in outgoing alert emails. | "Monitoring"<alerts@example.com> |
+| SMTP_MAIL_BASE | Optional | Alerting integrations | Base domain used in email-related templates or links. | monitoring.example.com |
+| SMTP_MAIL_SERVER | Optional | Alerting integrations | SMTP relay host. | smtp-relay.gmail.com |
+| SMTP_MAIL_PORT | Optional | Alerting integrations | SMTP relay port. | 465 |
+| SMTP_MAIL_USER | Optional | Alerting integrations | SMTP login user. | alerts@example.com |
+| SMTP_MAIL_PASSWORD | Optional | Alerting integrations | SMTP login password/app password. | app-password |
+| JEDI_MAIL_PASSW | Optional | Alerting integrations | Custom variable used by local alerting/email wiring. | app-password |
+| SPRING_DOCKER_COMPOSE_ENABLED | Optional | Application integration | Toggle used by Spring apps that may run alongside the stack. | false |
+
+Minimal required `.env` for stack startup:
+
+```env
+MINIO_ROOT_USER=admin
+MINIO_ROOT_PASSWORD=ChangeMeStrongPassword
+
+S3_ENDPOINT=minio:9000
+S3_ACCESS_KEY=admin
+S3_SECRET_KEY=ChangeMeStrongPassword
+
+MINIO_BUCKETS=loki,mimir,mimir-alertmanager,tempo
+```
+
 ## Accessing Services
 
 All services are exposed on `127.0.0.1` to prevent exposing them to the network by default.

@@ -5,11 +5,17 @@ services:
   minio:
     image: minio/minio:latest
     container_name: minio
-    ports:
-      - "127.0.0.1:9000:9000"
-      - "127.0.0.1:9001:9001"
+    hostname: minio
+    domainname: minio
     env_file: .env
     command: server /data --console-address ":9001"
+    restart: always
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     volumes:
       - minio-data:/data
     deploy:
@@ -22,25 +28,27 @@ services:
   minio-setup:
     image: minio/mc
     container_name: minio-setup
+    restart: on-failure
+    network_mode: "service:minio"
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
     env_file: .env
     entrypoint: >
       /bin/sh -c "
-      until (/usr/bin/mc alias set local http://$$S3_ENDPOINT $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD) do echo '...waiting for minio' && sleep 1; done;
+      until (/usr/bin/mc alias set local http://127.0.0.1:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD) do echo '...waiting for minio' && sleep 1; done;
       for bucket in $$(echo $$MINIO_BUCKETS | tr ',' ' '); do
         /usr/bin/mc mb --ignore-existing local/$$bucket;
       done;
       exit 0;
       "
-    networks:
-      - monitoring
 
   loki:
     image: grafana/loki:3.0.0
     container_name: loki
-    ports:
-      - "127.0.0.1:3100:3100"
+    hostname: loki
+    domainname: loki
+    restart: always
     command:
       - "-config.file=/etc/loki/config.yaml"
       - "-config.expand-env=true"
@@ -61,8 +69,9 @@ services:
   mimir:
     image: grafana/mimir:latest
     container_name: mimir
-    ports:
-      - "127.0.0.1:9099:9009"
+    hostname: prometheus
+    domainname: mimir
+    restart: always
     command: 
       - "-config.file=/etc/mimir/mimir.yaml"
       - "-config.expand-env=true"
@@ -88,11 +97,10 @@ services:
   tempo:
     image: grafana/tempo:latest
     container_name: tempo
+    hostname: tempo
+    domainname: tempo
+    restart: always
     env_file: .env
-    ports:
-      - "127.0.0.1:3200:3200"
-      - "127.0.0.1:4417:4417" # OTLP gRPC
-      - "127.0.0.1:4418:4418" # OTLP HTTP
     command:
       - "-config.file=/etc/tempo/tempo.yaml"
       - "-config.expand-env=true"
@@ -100,7 +108,8 @@ services:
       - ./configs/tempo-config.yaml:/etc/tempo/tempo.yaml
       - tempo-data:/var/tempo
     depends_on:
-      - minio-setup
+      minio-setup:
+        condition: service_completed_successfully
     deploy:
       resources:
         limits:
@@ -111,6 +120,9 @@ services:
   alloy:
     image: grafana/alloy:latest
     container_name: alloy
+    hostname: alloy
+    domainname: alloy
+    restart: always
     volumes:
       - ./configs/alloy-config.alloy:/etc/alloy/config.alloy
       - /var/run/docker.sock:/var/run/docker.sock
@@ -125,6 +137,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
+    hostname: grafana
     ports:
       - "127.0.0.1:3000:3000"
     volumes:

@@ -3,10 +3,61 @@ discovery.docker "all_containers" {
   host = "unix:///var/run/docker.sock"
 }
 
+discovery.relabel "docker_logs" {
+  targets = discovery.docker.all_containers.targets
+
+  // Skip containers that frequently emit non-parseable log records for this tailer.
+  rule {
+    action        = "drop"
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(alloy|minio)"
+  }
+
+  rule {
+    target_label = "job"
+    replacement  = "docker"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+}
+
 // 2. LOGS: Scrape container logs and send to Loki
 loki.source.docker "container_logs" {
   host    = "unix:///var/run/docker.sock"
-  targets = discovery.docker.all_containers.targets
+  targets = discovery.relabel.docker_logs.output
+  forward_to = [loki.process.drop_tempo_noise.receiver]
+}
+
+loki.process "drop_tempo_noise" {
+  stage.match {
+    selector = "{container=\"tempo\"} |= \"BackendScheduler/Next\""
+    action   = "drop"
+  }
+
+  stage.match {
+    selector = "{container=\"tempo\"} |= \"no jobs found\""
+    action   = "drop"
+  }
+
+  stage.match {
+    selector = "{container=\"tempo\"} |= \"error calling scheduler\""
+    action   = "drop"
+  }
+
+  forward_to = [loki.relabel.ensure_labels.receiver]
+}
+
+loki.relabel "ensure_labels" {
+  rule {
+    action = "replace"
+    target_label = "job"
+    replacement = "docker"
+  }
+
   forward_to = [loki.write.local_loki.receiver]
 }
 
