@@ -22,9 +22,10 @@ The stack is composed of the following services:
 *   **Tempo**: A high-volume, minimal-dependency distributed tracing backend.
     *   Receives traces from the OpenTelemetry Collector.
 
-*   **OpenTelemetry Collector**: A vendor-agnostic way to receive, process, and export telemetry data. It's configured to receive OTLP data and export it to Loki, Tempo, and Mimir.
+*   **OpenTelemetry Collector**: A vendor-agnostic way to receive, process, and export telemetry data. It's configured to receive OTLP data and export logs to Loki over OTLP/HTTP, traces to Tempo over OTLP/gRPC, and metrics to Mimir via Prometheus remote write.
     *   OTLP gRPC endpoint: `127.0.0.1:4317`
     *   OTLP HTTP endpoint: `127.0.0.1:4318`
+    *   Health endpoint: `127.0.0.1:13133`
 
 *   **Alloy**: A vendor-neutral telemetry collector from Grafana, based on the OpenTelemetry Collector. It can be used to collect logs, metrics, and traces.
 
@@ -88,3 +89,4 @@ All services are exposed on `127.0.0.1` to prevent exposing them to the network 
 *   **OpenTelemetry Collector Endpoints**:
     *   gRPC: `127.0.0.1:4317`
     *   HTTP: `127.0.0.1:4318`
+    *   Health: `127.0.0.1:13133`

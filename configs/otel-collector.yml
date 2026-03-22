@@ -1,37 +1,73 @@
+## Local OpenTelemetry Collector entrypoint for application OTLP traffic.
+## Receives OTLP over gRPC/HTTP and forwards logs to Loki, traces to Tempo,
+## and metrics to Mimir for the monitoring stack.
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
 receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: 0.0.0.0:4317
       http:
-
-exporters:
-  logging:
-    loglevel: debug
-  loki:
-    endpoint: "http://loki:3100/loki/api/v1/push"
-  otlp/tempo:
-    endpoint: tempo:4417
-    tls:
-      insecure: true
-  prometheusremotewrite/mimir:
-    endpoint: http://mimir:9009/api/v1/push
-    tls:
-      insecure: true
+        endpoint: 0.0.0.0:4318
 
 processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 256
+    spike_limit_mib: 64
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: local
+        action: upsert
   batch:
+    timeout: 5s
+    send_batch_size: 1024
+
+exporters:
+  debug:
+    verbosity: basic
+  otlp/tempo:
+    endpoint: tempo:4317
+    tls:
+      insecure: true
+    sending_queue:
+      enabled: true
+    retry_on_failure:
+      enabled: true
+  otlphttp/loki:
+    endpoint: http://loki:3100/otlp
+    compression: gzip
+    sending_queue:
+      enabled: true
+    retry_on_failure:
+      enabled: true
+  prometheusremotewrite/mimir:
+    endpoint: http://mimir:9009/api/v1/push
+    resource_to_telemetry_conversion:
+      enabled: true
+    remote_write_queue:
+      enabled: true
+      queue_size: 10000
+    retry_on_failure:
+      enabled: true
 
 service:
+  extensions: [health_check]
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [logging, otlp/tempo]
+      processors: [memory_limiter, resource, batch]
+      exporters: [otlp/tempo]
     metrics:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [logging, prometheusremotewrite/mimir]
+      processors: [memory_limiter, resource, batch]
+      exporters: [prometheusremotewrite/mimir]
     logs:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [logging, loki]
+      processors: [memory_limiter, resource, batch]
+      exporters: [otlphttp/loki]
