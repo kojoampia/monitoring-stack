@@ -77,7 +77,7 @@ frontend:
 # Limits config prevents a single app from crashing the service
 limits:
   ingestion_rate: 10000
-  max_label_names_per_series: 30
+  max_label_names_per_series: 60
   max_global_series_per_user: 100000
   # Retention - compactor enforces these
   compactor_blocks_retention_period: 30d

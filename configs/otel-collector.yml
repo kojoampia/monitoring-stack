@@ -1,6 +1,7 @@
 ## Local OpenTelemetry Collector entrypoint for application OTLP traffic.
 ## Receives OTLP over gRPC/HTTP and forwards logs to Loki, traces to Tempo,
 ## and metrics to Mimir for the monitoring stack.
+#file_format: yaml
 
 extensions:
   health_check:
@@ -21,9 +22,9 @@ processors:
     spike_limit_mib: 64
   resource:
     attributes:
-      - key: deployment.environment
-        value: local
-        action: upsert
+    - key: deployment.environment
+      value: local
+      action: upsert
   batch:
     timeout: 5s
     send_batch_size: 1024
@@ -57,17 +58,17 @@ exporters:
       enabled: true
 
 service:
-  extensions: [health_check]
+  extensions: [ health_check ]
   pipelines:
     traces:
-      receivers: [otlp]
-      processors: [memory_limiter, resource, batch]
-      exporters: [otlp/tempo]
+      receivers: [ otlp ]
+      processors: [ memory_limiter, resource, batch ]
+      exporters: [ otlp/tempo ]
     metrics:
-      receivers: [otlp]
-      processors: [memory_limiter, resource, batch]
-      exporters: [prometheusremotewrite/mimir]
+      receivers: [ otlp ]
+      processors: [ memory_limiter, resource, batch ]
+      exporters: [ prometheusremotewrite/mimir ]
     logs:
-      receivers: [otlp]
-      processors: [memory_limiter, resource, batch]
-      exporters: [otlphttp/loki]
+      receivers: [ otlp ]
+      processors: [ memory_limiter, resource, batch ]
+      exporters: [ otlphttp/loki ]
