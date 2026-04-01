@@ -128,3 +128,32 @@ prometheus.scrape "kojo_api" {
   forward_to = [prometheus.remote_write.local_mimir.receiver]
   scrape_interval = "15s"
 }
+
+prometheus.scrape "ecotrack_api" {
+  targets = [{"__address__" = "ecotrackapi:8080"}]
+  metrics_path = "/actuator/prometheus"
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}
+
+prometheus.scrape "ecotrack_crm" {
+  targets = [{"__address__" = "ecotrackcrm:8080"}]
+  metrics_path = "/actuator/prometheus"
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}
+
+prometheus.scrape "ecotrack_gw" {
+  targets = [{"__address__" = "ecotrackgw:8080"}]
+  metrics_path = "/actuator/prometheus"
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}
+
+prometheus.scrape "ecotrack_ms" {
+  targets = [{"__address__" = "ecotrackms:8080"}]
+  metrics_path = "/actuator/prometheus"
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}
+
