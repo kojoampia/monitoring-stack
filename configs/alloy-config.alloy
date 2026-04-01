@@ -104,8 +104,27 @@ otelcol.exporter.otlp "tempo_output" {
     tls { insecure = true }
   }
 }
+
 prometheus.scrape "node_exporter" {
   targets = [{"__address__" = "node-exporter:9100"}]
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}
+
+prometheus.scrape "cadvisor_scraper" {
+  targets = [{"__address__" = "cadvisor:8080"}]
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}
+
+prometheus.scrape "mongodb" {
+  targets = [{"__address__" = "mongodb-exporter:9216"}]
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}
+prometheus.scrape "kojo_api" {
+  targets = [{"__address__" = "kojo-stack-api:8080"}]
+  metrics_path = "/actuator/prometheus"
   forward_to = [prometheus.remote_write.local_mimir.receiver]
   scrape_interval = "15s"
 }
