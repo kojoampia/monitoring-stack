@@ -104,3 +104,8 @@ otelcol.exporter.otlp "tempo_output" {
     tls { insecure = true }
   }
 }
+prometheus.scrape "node_exporter" {
+  targets = [{"__address__" = "node-exporter:9100"}]
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}

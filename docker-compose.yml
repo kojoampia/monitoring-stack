@@ -1,6 +1,26 @@
 name: monitoring-stack
 
 services:
+  node-exporter:
+    image: prom/node-exporter:v1.8.0
+    container_name: node-exporter
+    restart: always
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    env_file: .env
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    networks:
+      - monitoring
   # Automated Bucket Creation for MinIO
   minio:
     image: minio/minio:RELEASE.2025-09-07T16-13-09Z
@@ -72,11 +92,11 @@ services:
     hostname: prometheus
     domainname: mimir
     restart: always
-    command: 
+    command:
       - "-config.file=/etc/mimir/mimir.yaml"
       - "-config.expand-env=true"
       # Enable the alertmanager and ruler
-      - "-target=all,alertmanager,ruler" 
+      - "-target=all,alertmanager,ruler"
     env_file: .env
     volumes:
       - ./configs/mimir-config.yaml:/etc/mimir/mimir.yaml
@@ -90,7 +110,7 @@ services:
       resources:
         limits:
           memory: 1.5G
-          cpus: '1.0'
+          cpus: "1.0"
     networks:
       - monitoring
 
@@ -189,7 +209,7 @@ networks:
   monitoring:
     driver: bridge
     name: monitoring
-    external: true      
+    external: true
 
 volumes:
   minio-data:
