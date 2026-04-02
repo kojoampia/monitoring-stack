@@ -14,44 +14,50 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "5.2.1"
+      "version": "11.0.0"
     },
     {
       "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": "5.0.0"
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
     },
     {
       "type": "datasource",
       "id": "prometheus",
       "name": "Prometheus",
-      "version": "5.0.0"
+      "version": "1.0.0"
     }
   ],
   "annotations": {
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
         "enable": true,
-        "hide": false,
-        "iconColor": "#e0752d",
-        "limit": 100,
-        "name": "PMM Annotations",
-        "showIn": 0,
-        "tags": [
-          "pmm_annotation"
-        ],
-        "type": "tags"
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
       }
     ]
   },
   "editable": true,
+  "fiscalYearStartMonth": 0,
   "gnetId": 7353,
   "graphTooltip": 1,
   "id": null,
   "iteration": 1529322343680,
+  "liveNow": false,
   "links": [
     {
       "icon": "dashboard",
@@ -151,7 +157,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": 1,
       "description": "Shows how many times a command is executed per second on average during the selected interval.",
@@ -241,7 +247,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "graph",
+      "type": "timeseries",
       "x-axis": true,
       "xaxis": {
         "buckets": null,
@@ -284,7 +290,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": null,
       "description": "Keep in mind the hard limit on the maximum number of connections set by your distribution.",
@@ -352,7 +358,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
-      "type": "graph",
+      "type": "timeseries",
       "x-axis": true,
       "xaxis": {
         "buckets": null,
@@ -395,7 +401,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": null,
       "description": "Helps identify why connections are increasing. Shows active cursors compared to cursors being automatically killed after 10 minutes due to an application not closing the connection.",
@@ -466,7 +472,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
-      "type": "graph",
+      "type": "timeseries",
       "x-axis": true,
       "xaxis": {
         "buckets": null,
@@ -509,7 +515,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": null,
       "description": "When used in combination with 'Command Operations', this graph can help identify write amplification. For example, when one insert or update command actually inserts or updates hundreds, thousands, or even millions of documents.",
@@ -579,7 +585,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
-      "type": "graph",
+      "type": "timeseries",
       "x-axis": true,
       "xaxis": {
         "buckets": null,
@@ -622,7 +628,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": null,
       "description": "Any number of queued operations for long periods of time is an indication of possible issues. Find the cause and fix it before requests get stuck in the queue.",
@@ -692,7 +698,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
-      "type": "graph",
+      "type": "timeseries",
       "x-axis": true,
       "xaxis": {
         "buckets": null,
@@ -735,7 +741,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": 2,
       "editable": true,
@@ -811,7 +817,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
-      "type": "graph",
+      "type": "timeseries",
       "x-axis": true,
       "xaxis": {
         "buckets": null,
@@ -854,7 +860,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": null,
       "editable": true,
@@ -925,7 +931,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
-      "type": "graph",
+      "type": "timeseries",
       "xaxis": {
         "buckets": null,
         "mode": "time",
@@ -962,7 +968,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": null,
       "description": "This is useful for write-heavy workloads to understand how long it takes to verify writes and how many concurrent writes are occurring.",
@@ -1028,7 +1034,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
-      "type": "graph",
+      "type": "timeseries",
       "x-axis": true,
       "xaxis": {
         "buckets": null,
@@ -1071,7 +1077,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": null,
       "description": "This is useful for write-heavy workloads to understand how long it takes to verify writes and how many concurrent writes are occurring.",
@@ -1151,7 +1157,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
-      "type": "graph",
+      "type": "timeseries",
       "x-axis": true,
       "xaxis": {
         "buckets": null,
@@ -1194,7 +1200,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": null,
       "description": "Asserts are not important by themselves, but you can correlate spikes with other graphs.",
@@ -1265,7 +1271,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
-      "type": "graph",
+      "type": "timeseries",
       "x-axis": true,
       "xaxis": {
         "buckets": null,
@@ -1308,7 +1314,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "decimals": null,
       "description": "Page faults indicate that requests are processed from disk either because an index is missing or there is not enough memory for the data set. Consider increasing memory or sharding out.",
@@ -1375,7 +1381,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
-      "type": "graph",
+      "type": "timeseries",
       "x-axis": true,
       "xaxis": {
         "buckets": null,
@@ -1413,14 +1419,30 @@
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 16,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [
     "MongoDB",
     "Percona"
   ],
   "templating": {
     "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Mimir",
+          "value": "mimir"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
       {
         "allFormat": "glob",
         "auto": true,
@@ -1432,7 +1454,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "hide": 0,
         "includeAll": false,
@@ -1487,12 +1509,12 @@
         "type": "interval"
       },
       {
-        "allFormat": "blob",
+        "allFormat": "glob",
         "allValue": null,
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "hide": 0,
         "includeAll": true,
@@ -1501,7 +1523,7 @@
         "multiFormat": "glob",
         "name": "cluster",
         "options": [],
-        "query": "label_values(cluster)",
+        "query": "label_values(mongodb_up, cluster)",
         "refresh": 1,
         "regex": "",
         "sort": 1,
@@ -1517,7 +1539,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "hide": 0,
         "includeAll": false,
@@ -1526,7 +1548,7 @@
         "multiFormat": "glob",
         "name": "host",
         "options": [],
-        "query": "label_values({__name__=~\"mongodb_mongod_connections{cluster=~\\\"$cluster\\\"}|mongodb_up\"}, instance)",
+        "query": "label_values(mongodb_up{cluster=~\"$cluster\"}, instance)",
         "refresh": 1,
         "regex": "",
         "sort": 1,

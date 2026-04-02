@@ -129,31 +129,51 @@ prometheus.scrape "kojo_api" {
   scrape_interval = "15s"
 }
 
-prometheus.scrape "ecotrack_api" {
-  targets = [{"__address__" = "ecotrackapi:8080"}]
+prometheus.scrape "ecotrackdashboard" {
+  targets = [{"__address__" = "ecotrackdashboard:8080"}]
   metrics_path = "/actuator/prometheus"
   forward_to = [prometheus.remote_write.local_mimir.receiver]
   scrape_interval = "15s"
 }
 
-prometheus.scrape "ecotrack_crm" {
+prometheus.scrape "ecotrackcrm" {
   targets = [{"__address__" = "ecotrackcrm:8080"}]
   metrics_path = "/actuator/prometheus"
   forward_to = [prometheus.remote_write.local_mimir.receiver]
   scrape_interval = "15s"
 }
 
-prometheus.scrape "ecotrack_gw" {
-  targets = [{"__address__" = "ecotrackgw:8080"}]
+prometheus.scrape "ecotrackcbam" {
+  targets = [{"__address__" = "ecotrackcbam:8080"}]
   metrics_path = "/actuator/prometheus"
   forward_to = [prometheus.remote_write.local_mimir.receiver]
   scrape_interval = "15s"
 }
 
-prometheus.scrape "ecotrack_ms" {
-  targets = [{"__address__" = "ecotrackms:8080"}]
+prometheus.scrape "ecotrackadmin" {
+  targets = [{"__address__" = "ecotrackadmin:8080"}]
   metrics_path = "/actuator/prometheus"
   forward_to = [prometheus.remote_write.local_mimir.receiver]
   scrape_interval = "15s"
 }
 
+prometheus.scrape "ecotrackfront" {
+  targets = [{"__address__" = "ecotrackfront:8080"}]
+  metrics_path = "/actuator/prometheus"
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}
+
+#ecodb-postgresql-exporter
+prometheus.scrape "ecodb" {
+  # The exporter exposes metrics on port 9187 by default
+  targets = [{"__address__" = "ecodb-exporter:9187"}]
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+}
+
+#ecogwdb-mongo-exporter
+prometheus.scrape "ecogwdb" {
+  targets = [{"__address__" = "ecogwdb-exporter:9216"}]
+  forward_to = [prometheus.remote_write.local_mimir.receiver]
+  scrape_interval = "15s"
+}

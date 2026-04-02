@@ -94,7 +94,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "",
       "fieldConfig": {
@@ -150,7 +150,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_up{env=~\"$env\"}",
@@ -165,7 +165,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "Mongodb Service Uptime in hours",
       "fieldConfig": {
@@ -217,7 +217,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_members_uptime{env=~\"$env\", member_state=\"PRIMARY\"}",
@@ -232,7 +232,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "The number of incoming connections from clients to the database server. This number includes the current shell session. Consider the value of connections.available to add more context to this datum.",
       "fieldConfig": {
@@ -283,7 +283,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_ss_connections{env=\"$env\", conn_type=\"current\"}",
@@ -298,7 +298,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "Count of all incoming connections created to the server. This number includes connections that have since closed.",
       "fieldConfig": {
@@ -349,7 +349,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_ss_connections{env=\"$env\", conn_type=\"totalCreated\"}",
@@ -364,7 +364,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "The number of unused incoming connections available. Consider this value in combination with the value of connections.current to understand the connection load on the database, and the UNIX ulimit Settings document for more information about system thresholds on available connections.",
       "fieldConfig": {
@@ -415,7 +415,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_ss_connections{env=\"$env\", conn_type=\"available\"}",
@@ -430,7 +430,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "The number of active client connections to the server. Active client connections refers to client connections that currently have operations in progress.",
       "fieldConfig": {
@@ -481,7 +481,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_ss_connections{env=\"$env\", conn_type=\"available\"}",
@@ -496,7 +496,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "",
       "gridPos": {
@@ -517,7 +517,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "The total number of insert operations received since the mongod instance last started.",
       "fieldConfig": {
@@ -590,7 +590,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "rate(mongodb_ss_opcounters{env=\"$env\", legacy_op_type=\"insert\"}[$__interval])",
@@ -605,7 +605,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "The total number of update operations received since the mongod instance last started.",
       "fieldConfig": {
@@ -678,7 +678,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "rate(mongodb_ss_opcounters{env=\"$env\", legacy_op_type=\"update\"}[$__interval])",
@@ -693,7 +693,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "The total number of commands issued to the database since the mongod instance last started.\n\nopcounters.command counts all commands except the write commands: insert, update, and delete.",
       "fieldConfig": {
@@ -766,7 +766,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "rate(mongodb_ss_opcounters{env=\"$env\", legacy_op_type=\"command\"}[$__interval])",
@@ -781,7 +781,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "The total number of queries received since the mongod instance last started.",
       "fieldConfig": {
@@ -854,7 +854,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "rate(mongodb_ss_opcounters{env=\"$env\", legacy_op_type=\"query\"}[$__interval])",
@@ -869,7 +869,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "The total number of delete operations since the mongod instance last started.",
       "fieldConfig": {
@@ -942,7 +942,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "rate(mongodb_ss_opcounters{env=\"$env\", legacy_op_type=\"delete\"}[$__interval])",
@@ -957,7 +957,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "The total number of getMore operations since the mongod instance last started. This counter can be high even if the query count is low. Secondary nodes send getMore operations as part of the replication process.",
       "fieldConfig": {
@@ -1030,7 +1030,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "rate(mongodb_ss_opcounters{env=\"$env\", legacy_op_type=\"getmore\"}[$__interval])",
@@ -1045,7 +1045,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "Number of collections in the database.",
       "fieldConfig": {
@@ -1096,7 +1096,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_dbstats_collections{env=\"$env\", instance=\"$instance\"}",
@@ -1111,7 +1111,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "Total number of indexes across all collections in the database.",
       "fieldConfig": {
@@ -1162,7 +1162,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_dbstats_indexes{env=\"$env\", instance=\"$instance\"}",
@@ -1177,7 +1177,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "Number of views in the database.",
       "fieldConfig": {
@@ -1228,7 +1228,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_dbstats_views{env=\"$env\", instance=\"$instance\"}",
@@ -1243,7 +1243,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "Sum of the space allocated to all collections in the database for document storage, including free space.",
       "fieldConfig": {
@@ -1319,7 +1319,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_dbstats_storageSize{env=\"$env\", instance=\"$instance\"}",
@@ -1334,7 +1334,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "Sum of the space allocated to all indexes in the database, including free index space.",
       "fieldConfig": {
@@ -1410,7 +1410,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_dbstats_indexSize{env=\"$env\", instance=\"$instance\"}",
@@ -1438,7 +1438,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -1487,7 +1487,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_rs_members_id{env=\"$env\", member_state=\"PRIMARY\", instance=\"$instance\"}",
@@ -1501,7 +1501,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "This metric can show a correlation with the replication lag value.",
       "fieldConfig": {
@@ -1579,7 +1579,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_rs_members_pingMs{env=\"$env\", instance=\"$instance\"}",
@@ -1594,7 +1594,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "The oplog (operations log) is a special capped collection that keeps a rolling record of all operations that modify the data stored in your databases.",
       "fieldConfig": {
@@ -1683,7 +1683,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_oplog_stats_size{env=\"$env\", instance=\"$instance\", rs_nm=\"$rs\"}",
@@ -1698,7 +1698,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -1744,7 +1744,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_rs_members_id{env=\"$env\", member_state=\"SECONDARY\", instance=\"$instance\"}",
@@ -1758,7 +1758,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "MongoDB replication lag occurs when the secondary node cannot replicate data fast enough to keep up with the rate that data is being written to the primary node. It could be caused by something as simple as network latency, packet loss within your network, or a routing issue.",
       "fieldConfig": {
@@ -1860,7 +1860,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_rs_members_optimeDate{env=\"$env\", instance=\"$instance\", rs_nm=\"$rs\"} - mongodb_rs_members_optimeDate{env=\"$env\", instance=\"$instance\", rs_nm=\"$rs\"}",
@@ -1875,7 +1875,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "This shows the time since the last election.",
       "fieldConfig": {
@@ -1923,7 +1923,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "expr": "mongodb_electionCandidateMetrics_lastElectionDate{env=\"$env\"}",
           "refId": "A"
@@ -1948,7 +1948,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "Cursor is a pointer, and using this pointer we can access the document. cursor.timeOut property was updated incrementally, and connections that died without closing the cursor. The consequence is that it will remain open on the server and consume memory unless it is reaped by the default MongoDB setting.",
       "fieldConfig": {
@@ -2023,7 +2023,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_ss_metrics_cursor_timedOut{env=\"$env\", rs_nm=\"$rs\"}",
@@ -2038,7 +2038,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "description": "Number of cursors currently opened by MongoDB for clients",
       "fieldConfig": {
@@ -2113,7 +2113,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "mongodb_ss_metrics_cursor_totalOpened{env=\"$env\", rs_nm=\"$rs\"}",
@@ -2141,7 +2141,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -2221,7 +2221,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "avg(rate(node_cpu_seconds_total{env=\"$env\", mode=\"system\"}[$interval])) by (instance) *100",
@@ -2237,7 +2237,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -2320,7 +2320,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "node_memory_MemTotal_bytes{env=\"$env\", job=\"$nodeJob\"} - node_memory_MemFree_bytes{env=\"$env\", job=\"$nodeJob\"} - (node_memory_Cached_bytes{env=\"$env\", job=\"$nodeJob\"} + node_memory_Buffers_bytes{env=\"$env\", job=\"$nodeJob\"})",
@@ -2332,7 +2332,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "node_memory_Cached_bytes{env=\"$env\", job=\"$nodeJob\"} + node_memory_Buffers_bytes{env=\"$env\", job=\"$nodeJob\"} + node_memory_SReclaimable_bytes{env=\"$env\", job=\"$nodeJob\"}",
@@ -2348,7 +2348,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -2427,7 +2427,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "irate(node_network_receive_bytes_total{env=\"$env\", job=\"$nodeJob\"}[5m])",
@@ -2438,7 +2438,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "irate(node_network_transmit_bytes_total{env=\"$env\", job=\"$nodeJob\"}[5m])",
@@ -2454,7 +2454,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -2536,7 +2536,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "rate(node_disk_read_bytes_total{env=\"$env\", job=\"$nodeJob\",device=~\"$device\"}[$interval])",
@@ -2547,7 +2547,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "rate(node_disk_written_bytes_total{env=\"$env\", job=\"$nodeJob\",device=~\"$device\"}[$interval])",
@@ -2563,7 +2563,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -2638,7 +2638,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "100 - ((node_filesystem_avail_bytes{env=\"$env\", job=\"$nodeJob\",device!~'rootfs'} * 100) / node_filesystem_size_bytes{env=\"$env\", job=\"$nodeJob\",device!~'rootfs'})",
@@ -2658,10 +2658,27 @@
   "templating": {
     "list": [
       {
+        "current": {
+          "selected": false,
+          "text": "Mimir",
+          "value": "mimir"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "definition": "label_values(mongodb_up, env)",
         "hide": 0,
@@ -2684,7 +2701,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "definition": "label_values(mongodb_up{env=\"$env\"}, job)",
         "hide": 2,
@@ -2707,7 +2724,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "definition": "label_values(node_uname_info, nodename)",
         "hide": 2,
@@ -2730,7 +2747,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "definition": "label_values(mongodb_up{env=\"$env\"}, instance)",
         "hide": 0,
@@ -2806,7 +2823,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "definition": "label_values(node_uname_info, job)",
         "hide": 2,
@@ -2828,7 +2845,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "definition": "label_values(node_filesystem_size_bytes, mountpoint)",
         "hide": 0,
@@ -2851,7 +2868,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "definition": "label_values(node_disk_reads_completed_total, device)",
         "hide": 2,
@@ -2874,7 +2891,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "definition": "label_values(mongodb_rs_ok{env=\"$env\"}, rs_nm)",
         "hide": 0,

@@ -59,7 +59,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "gridPos": {
         "h": 1,
@@ -75,7 +75,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -126,7 +126,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "gridPos": {
         "h": 1,
@@ -142,7 +142,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -192,7 +192,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -243,7 +243,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "gridPos": {
         "h": 1,
@@ -259,7 +259,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -309,7 +309,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -359,7 +359,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "gridPos": {
         "h": 1,
@@ -375,7 +375,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "mimir"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -511,11 +511,28 @@
   "templating": {
     "list": [
       {
+        "current": {
+          "selected": false,
+          "text": "Mimir",
+          "value": "mimir"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
         "allValue": ".*",
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "definition": "label_values({__name__=~\"container.*\"},instance)",
         "description": null,
@@ -545,7 +562,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "mimir"
+          "uid": "$datasource"
         },
         "definition": "label_values({__name__=~\"container.*\", instance=~\"$host\"},name)",
         "description": null,

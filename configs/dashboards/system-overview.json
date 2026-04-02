@@ -16,7 +16,7 @@
       "targets": [
         {
           "datasource": {
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "expr": "sum(rate(prometheus_tsdb_head_samples_appended_total[5m]))"
         }
@@ -52,7 +52,7 @@
       "targets": [
         {
           "datasource": {
-            "uid": "mimir"
+            "uid": "$datasource"
           },
           "expr": "sum(rate(tempo_ingester_spans_received_total[5m]))"
         }
@@ -60,5 +60,26 @@
     }
   ],
   "title": "System Infrastructure Overview",
-  "uid": "system-infra-01"
+  "uid": "system-infra-01",
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Mimir",
+          "value": "mimir"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      }
+    ]
+  }
 }
