@@ -164,14 +164,14 @@ prometheus.scrape "ecotrack_front" {
   scrape_interval = "15s"
 }
 
-#ecodb-postgresql-exporter
+//ecodb-postgresql-exporter
 prometheus.scrape "ecodb" {
-  # The exporter exposes metrics on port 9187 by default
+  // The exporter exposes metrics on port 9187 by default
   targets = [{"__address__" = "ecodb-exporter:9187"}]
   forward_to = [prometheus.remote_write.local_mimir.receiver]
 }
 
-#ecogwdb-mongo-exporter
+//ecogwdb-mongo-exporter
 prometheus.scrape "ecogwdb" {
   targets = [{"__address__" = "ecogwdb-exporter:9216"}]
   forward_to = [prometheus.remote_write.local_mimir.receiver]
